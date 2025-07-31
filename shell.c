@@ -3,6 +3,8 @@
 //Implemento i comandi shell 
 //Collegamento main-shell
 
+
+//Comandi per info
 void list(){
   printf("Comandi disponibili:\n");
   printf("format <filename><size> -Inizializza il file system\n ");
@@ -39,13 +41,27 @@ void list(){
   //printf("Comando non presente nella lista dei comandi shell");
 }
 */
-/**/
+
+/*
+Comandi da implementare:
+-format((filename,size)
+-mkdir
+-cd
+-touch
+-cat
+-ls
+-append
+-rm
+*/
+
+//----Comandi di shell
+/*Inizializza il file system*/
 int format(const char* filename,int size){
-  
+  return initialize_FS(filename,size);
 }
 /*Crea la cartella con nome dirname*/
 int mkdir(const char* dirname){
-  createDirectory(dirname);
+  return createDirectory(dirname);
 }
 /*Mi sposto in una directory*/
 int cd(const char* dirname){
@@ -61,13 +77,14 @@ int cat(const char*filename){
 }
 /*Lista la directory corrente*/
 int ls(){
-  printDirectory();
+  //nel caso in cui non ci siano file dico "Nessun file da
+  return printDirectory();
 }
 /*Aggiunge il testo txt al file nella directory corrente*/
 int append (const char* file,const char* txt){
-  writeFile(file,txt);
+  return writeFile(file,txt);
 }
 /*Rimuove il file o una sottodirectory*/
 int rm(const char* name){
-  remove(name); //dovrò fare un controllo se sarà una directory o un file, ancora da vedere il come//
+  return remove(name); //dovrò fare un controllo se sarà una directory o un file, ancora da vedere il come//
 }

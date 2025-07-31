@@ -3,90 +3,48 @@
 #include <string.h>
 #include <stdlib.h>
 
+
+#include <signal.h>
+#include <process_stuff.h>  //main.c <-- process_stuff.h
+
 #define MAX_LINE 2048
 #define MAX_TOKENS 256
-
-
-
 void exec_cmd(char* argv[MAX_TOKENS],int argc){
-  char* cmd=argv[0];
+  int res; //memorizza il valore restituito dal singolo comando
+  char* cmd=argv[0]; //comando in ingresso
+  
   pid_t pid=fork();
   if(pid==-1){
     perror("fork error");
     exit(EXIT_FAILURE);
   }
+  //I processi figli eseguono i comandi
   if(pid==0){
-  
-    if(strcmp(cmd,"list")==0){
-      list();
-    }
-    //Da vedere
-    /*else if(strcmp(cmd,"man")==0){
-      char* command=argv[1];
-      if(command==NULL){
-        printf("Comando non valido!");
-        return;
-      }
-      man(command);
-    }*/
+    //-----PROCESSO FIGLIO------
+    childFunction();
+  }else{
+    //---Processo padre
+    struct sigaction sa_int;
+    //Gestion SIGINT (Crl+C)
+    sa_int.sa_handler = sigchld_handler;
+    sigemptyset(&new_action.sa_mask);
+    new_action.sa_flags = 0;
+    sigaction(SIGINT,sa_int,NULL); //serve per gestire i segnali
     
-    else if(strcmp(cmd,"format")==0){
-      char* filename=argv[1];
-      if(filename==NULL){
-        printf("Nome del file non specificato\n");
-      }
-      char* size= argv[2];
-      if(size==NULL){
-        printf("Taglia non specificata");
-      }
-      format(filename,size);
-    }else if(strcmp(cmd,"mkdir")==0){
-      char* dirname=argv[1];
-      if(dirname==NULL){
-        printf("Cartella non specificata\n");
-      }
-      mkdir(dirname);
-    }else if(strcmp(cmd,"cd")==0){
-      char* dirname=argv[1];
-      if(dirname==NULL){
-        printf("Cartella non specificata\n");
-      }
-      cd(dirname);
-    }else if(strcmp(cmd,"touch")==0){
-      char* filename=argv[1];
-      if(filename==NULL){
-        printf();
-      }
-      touch(filename);
-    }else if(strcmp(cmd,"cat")==0){
-      char* filename=argv[1];
-      if(filename==NULL){
-        printf("Nome del file non specificato\n");
-      }
-      cat(filename);
-    }else if(strcmp(cmd,"ls")==0){
-    
-    }else if(strcmp(cmd,"append")==0){
-     char* filename=argv[1];
-     if(filename==NULL){
-        printf("Nome del file non specificato!\n");
-     }
-     char* text=argv[2];
-     if(text==NULL){
-      printf("Testo da aggiungere non presente!\n");
-     }
-     append(filename,txt);
-    }else if(strcmp(cmd,"rm")==0){
-      char* name; //può essere file o directory
-      if (name==NULL){
-        printf("Nome del file/cartella non specificato\n");
-      }
-      rm(name);
-    }else{
-      //Caso in cui nessun comando corrisponde a quelli della shell//
-      printf("Errore: comando sconosciuto. Usa 'list'.\n");
-    }
-  /**/
+    struct sigaction sa_chld;
+    //Gestion SIGCHLD
+    sa_chld.sa_handler=sigchld_handler;
+    sigemptyset(&new_action.sa_mask);
+    new_action.sa_flags=0;
+    sigaction(SIGCHLD,sa_chld,NULL);
+    parentFunction();
+  }
+  /*processo padre*/
+  res = wait(NULL);
+  if (pid==-1){
+    perror("wait error");
+    exit(EXIT_FAILURE);
+  }
 }
 
 void deallocate_cmd(char* argv[MAX_TOKENS]){
@@ -113,24 +71,12 @@ void get_cmd_line(char* argv[MAX_TOKENS], int* argc){
     }
     argv[*argc] = NULL;
 }
-void initiliazeFS(){
-  char response[10];
-  printf("È la prima volta che usi questo FS?[Y/N]%s",response);
-  if(strcmp(response,"Yes"){
-    printf("Inizializzazione.../n");
-    fs_init(); //sarà una funzione che inizializzerà il sistema
-    return;
-  }else{
-    printf("Stai usando il FS corrente");
-    ls();
-  }
-}
+
 
 int do_shell(const char* prompt){
-  initiliazeFS();
   print("Comandi utili:/n");
   printf("list: lista i comandi disponibili/n");
-  printf("man comando:se si desidera una descrizione più approfondita di un comando /n");
+  //Da decidere:printf("man comando:se si desidera una descrizione più approfondita di un comando /n");
   for(;;){
     printf("%s"r,opmpt);
     char* argv[MAX_TOKENS];
