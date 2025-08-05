@@ -1,4 +1,4 @@
-#include shell.h
+#include shell.hèèèèè
 #include fs.h
 //Implemento i comandi shell 
 //Collegamento main-shell
@@ -40,18 +40,6 @@ void list(){
   /*Caso in cui il comando non è presente nella lista1*/
   //printf("Comando non presente nella lista dei comandi shell");
 }
-*/
-
-/*
-Comandi da implementare:
--format((filename,size)
--mkdir
--cd
--touch
--cat
--ls
--append
--rm
 */
 
 //----Comandi di shell

@@ -10,5 +10,5 @@ int cd(char* dirname);
 int touch(char* fs_filename);
 int cat(char* fs_filename);
 int ls();
-int append();
-int rm();
+int append(char* filename,char* txt);
+int rm(char* name); //può essere o file o una directory
