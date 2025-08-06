@@ -34,21 +34,11 @@ void exec_cmd(char* argv[MAX_TOKENS],int argc){
     if(strcmp(cmd,"list")==0){
       list();
     }
-    //Da vedere
-    /*else if(strcmp(cmd,"man")==0){
-      char* command=argv[1];
-      if(command==NULL){
-        printf("Comando non valido!");
-        return;
-      }
-      man(command);
-    }*/
-    //crea il file system
     else if(strcmp(cmd,"format")==0){
       char* filename=argv[1];
       if(filename==NULL){
         printf("Nome del file non specificato\n");
-        _exit(1);
+        exit(-1);
       }
       char* size= argv[2];
       if(size==NULL){
@@ -63,17 +53,19 @@ void exec_cmd(char* argv[MAX_TOKENS],int argc){
       char* dirname=argv[1];
       if(dirname==NULL){
         printf("Cartella non specificata\n");
+        exit(-1);
       }
       ret=mkdir(dirname);
       if(ret<0){
-        
+        printf("Errore durante la creazione della cartella");
       }
     }else if(strcmp(cmd,"cd")==0){
       char* dirname=argv[1];
       if(dirname==NULL){
         printf("Cartella non specificata\n");
       }
-      cd(dirname);
+      ret=cd(dirname);
+      if()
     }else if(strcmp(cmd,"touch")==0){
       char* filename=argv[1];
       if(filename==NULL){
@@ -109,6 +101,7 @@ void exec_cmd(char* argv[MAX_TOKENS],int argc){
         printf("Errore: questo file non può essere rimosso.\n");
       }
     }else{
+      /*Caso in cui il comando non è tra quelli della shell*/
       printf("Errore: comando sconosciuto.\n");
       printf("Usa 'list' per la lista dei comandi");
     }

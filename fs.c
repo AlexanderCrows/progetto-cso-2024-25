@@ -10,11 +10,19 @@ extern Superblock s;
 extern Inode* current_dir_inode;
 
 
-//
+
+
+/*
 int seekFile(int fd, off_t offset){
   
 
 }
+*/
+
+/*Data inizio funzione initialize_FS 06/08/2015:
+Capire per prima cosa come inizializzare 
+il file system e aggiungere un file
+per fare una run*/
 
 //Funzione per inizializzare il fileSystem
 int initialize_FS(char* filename,int size){
@@ -38,32 +46,46 @@ int initialize_FS(char* filename,int size){
     return -1;
   }
 
-  //Inizializzazione Superblocco
+  //---Inizializzazione Superblocco---                                      
   s.total_inodes = MAX_INODES;
   s-total_blocks = MAX_BLOCKS;
   s.free_inodes = MAX_INODES;
   s.free_blocks = MAX_BLOCKS;
-  //Inizializzo le bitmap
-  s.block_bitmap[BLOCK_SIZE]; 
-  s.inode_bitmap[BLOCK_SIZE];
-  s.inode_table_start_index;
-  s.data_blocks_start_index;
   
-  //salvare il Superblocco nel file del filesystem
+  //---Inizializzo gli indici delle bitmap---
+  //dopo l'allocazione del Superblocco iniziano le bitmap
+  s.inode_bitmap_start_idx=sizeof(Superblock);                                 
+  s.data_block_bitmap_start_idx = s.inode_bitmap_start_idx + INODE_BITMAP_SIZE ;
+  s.inode_table_start_idx = s.data_block_bitmap_start_idx +  DATA_BLOCK_BITMAP_SIZE;
+  s.data_blocks_start_idx = s.inode_table_start_idx + ;
   
+  //Inizializzo le aree di memoria per bitmap e tabelle
+  memset(mem+s.inode_bitmap_start_idx,0,INODE_BITMAP_SIZE);
+  memset(mem+s.data_block_bitmap_start_idx,0,DATA_BLOCK_BITMAP_SIZE);
+  memset(mem+s.inode_table_start_idx,0,INODE_TABLE_SIZE);
   
+  /*Ricordarsi di aggiungere le costanti nell'aux.h*/
   //Salvataggio avvenuto con successo
   printf("Salvataggio avvenuto con successo");
   return 0;
 }
-
+/*
 //Creazione della directory
 int createDirectory(char* dirname){
-    Inode dir= search_free_inode();
+    int i=searchFreeInode();
+    if(i==-1){
+      printf("Nessun Inode disponibile per la directory");
+      return -1;
+    }
+    
+    
    //qui avviene la mappatura in memoria
+   
 }
+
+*/
 //Cambio della directory
-int changeDirectory(char* dirname){
+/*int changeDirectory(char* dirname){
   if(strcmp(dirname,".")){
     printf("Nessun cambio di cartella");
   }else if(strcmp(dirname,"..")){
@@ -75,14 +97,14 @@ int changeDirectory(char* dirname){
     ref=dir;
   }
 }
-
+*/
 
 int createFile(char* filename){
   int fd=
   //qui avviene la mappatura in memoria
 }
 
-
+/*
 int readFile(char* filename){
     
   Dir_Entry* d=searchFileInCurrentDir();
@@ -112,6 +134,8 @@ int readFile(char* filename){
  printf("File non trovato");
  return -1;
  }
+ */
+ 
  
 //Funzione per listare il contenuto di una directory
 void printDirectory(){
@@ -135,6 +159,7 @@ void printDirectory(){
   
 }
 
+/*
 //Funzione per scrivere su un file
 int writeFile(char* filename,char* txt){
   int fileInode= searchInodeInFS(ref,filename);
@@ -148,7 +173,9 @@ int writeFile(char* filename,char* txt){
   
   
 }
+*/
 
+/*
 //Funzione per rimuovere un file o una sottodirectory
 int remove(char* name){
   if(current_dir.free_spa
@@ -179,5 +206,6 @@ int remove(char* name){
  printf("Errore:Non è stato trovato nessun file/directory con il nome %s.",name);
  return -1;
 }
+*/
 
 
